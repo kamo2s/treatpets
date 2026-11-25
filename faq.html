@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>FAQ — Treat</title>
+<meta name="description" content="Questions about $TREAT: where the wishes come from, how items are bought and delivered, and where the fees go." />
+<link rel="icon" type="image/webp" href="assets/logo-paw.webp?v=1" />
+<link rel="apple-touch-icon" href="assets/logo-paw.webp?v=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/site.css?v=22" />
+</head>
+<body data-page="faq">
+<script src="assets/data.js?v=22"></script>
+<script src="assets/local-preview.js?v=22"></script>
+<script src="assets/site.js?v=22"></script>
+
+<header class="page-head">
+  <div class="wrap">
+    <div class="eyebrow">FAQ</div>
+    <h1 class="display">Questions</h1>
+    <p><span data-brand>Treat</span> works through these services and is not affiliated with any of them.</p>
+    <div class="chips">
+      <span class="chip"><img class="ico" src="https://upload.wikimedia.org/wikipedia/commons/b/bd/Pump_fun_logo.png" alt=""> <b>pump.fun</b></span>
+      <span class="chip"><img src="https://upload.wikimedia.org/wikipedia/commons/6/63/Chewy_pet_food_logo.svg" alt="Chewy"></span>
+      <span class="chip"><img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon" style="height:14px;margin-top:4px"></span>
+      <span class="chip"><img class="ico" src="https://www.sp3nd.shop/icons/icon-180x180.png" alt=""> <b>SP3ND</b></span>
+      <span class="chip"><img src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Circle_USDC_Logo.svg" alt=""> <b>USDC</b></span>
+      <span class="chip"><svg viewBox="0 0 398 312" aria-hidden="true"><use href="#sol"/></svg> <b>Solana</b></span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap pg">
+  <div class="faq" style="max-width:860px">
+    <details open><summary>Where do the wishes come from?</summary><p>From the public wish lists that US shelters and rescues keep on Chewy. We read those pages the way any visitor would and show the open items. Nothing is added or chosen by us.</p></details>
+    <details><summary>How is this different from donating crypto to a charity?</summary><p>Crypto donations usually arrive as money the charity has to sign up for, verify and claim, and then turn into supplies. <span data-brand>Treat</span> never sends money to a shelter: it buys the exact items on its wish list and has them delivered. The shelter just gets a box.</p></details>
+    <details><summary>If the lists are on Chewy, why are the items bought on Amazon?</summary><p>Amazon orders can be paid in USDC on Solana through SP3ND, so the treasury pays on chain and every payment leaves a public record. Each wish is matched to the same product on Amazon.</p></details>
+    <details><summary>How do you know it's the same product?</summary><p>Same brand, same size or count, close price. If no close match exists, the wish is skipped rather than swapped for something else.</p></details>
+    <details><summary>What is SP3ND?</summary><p>A service that lets you buy on Amazon and pay in USDC on Solana. It prices the order with tax and shipping, takes the USDC payment and places the Amazon order. Each payment's memo carries the SP3ND order number.</p></details>
+    <details><summary>Why are some wishes never bought?</summary><p>Some items are sold only on Chewy (its own brands, for example), and some have no close match on Amazon. Those are skipped so the shelter never gets something it didn't ask for.</p></details>
+    <details><summary>Who decides which shelter gets helped?</summary><p>A fixed rule: shelters that have never been helped come first, and inside a list, items the shelter marked most-needed come first. See <a class="lnk" href="how-it-works.html">How it works</a>.</p></details>
+    <details><summary>Does the shelter have to sign up or do anything?</summary><p>No. The box arrives at the shelter's public address like any gift from its wish list.</p></details>
+    <details><summary>Where do the orders get delivered?</summary><p>To the shipping address the shelter itself uses for its public wish list. We never publish a shelter's address.</p></details>
+    <details><summary>How do I know an order arrived?</summary><p>Every order on the <a class="lnk" href="granted.html">Granted</a> page links to its carrier tracking, which ends in "Delivered" at the shelter.</p></details>
+    <details><summary>Does a bought item disappear from the shelter's Chewy list?</summary><p>No. The item is bought on Amazon, so Chewy doesn't know about it. It stays on the Chewy list until the shelter removes it, and we mark it as granted on our side so it isn't bought twice.</p></details>
+    <details><summary>How much of the fees goes to the shelters?</summary><p><span id="fundShare">90%</span> of the creator fees go into the wish fund. The rest pays the team that runs it. Every swap is on the <a class="lnk" href="treasury.html">Treasury</a> page.</p></details>
+    <details><summary>What does the fund pay besides the items?</summary><p>Sales tax and shipping on each order, as priced by SP3ND. Nothing else comes out of the wish fund.</p></details>
+    <details><summary>What if an order goes wrong?</summary><p>If an order is cancelled or lost, the refund goes back into the wish fund and the wishes are bought again. The order's row on the Granted page shows what happened.</p></details>
+    <details><summary>Why Amazon, and not Walmart?</summary><p>Wishes are bought wherever an order can be paid in USDC on chain and leave a public record. Today that's Amazon through SP3ND. Walmart prices are shown for comparison, and Walmart will be added as soon as there's a way to pay it that leaves the same public proof.</p></details>
+    <details><summary>Is this a charity?</summary><p>No. <span data-ticker>$TREAT</span> is a memecoin whose creator fees are used to buy shelter supplies. It is not a registered charity, and buying it is not a tax-deductible donation.</p></details>
+    <details><summary>Do holders get paid?</summary><p>No. Holders receive nothing. <span data-ticker>$TREAT</span> is not an investment. Memecoins are extremely risky and can go to zero.</p></details>
+  </div>
+</main>
+<script>document.getElementById("fundShare").textContent = CONFIG.fundShare + "%";</script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Wishes — Treat</title>
+<meta name="description" content="What US shelters are wishing for right now: real items from their public Chewy wish lists." />
+<link rel="icon" type="image/webp" href="assets/logo-paw.webp?v=1" />
+<link rel="apple-touch-icon" href="assets/logo-paw.webp?v=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/site.css?v=22" />
+</head>
+<body data-page="wishes">
+<script src="assets/data.js?v=22"></script>
+<script src="assets/local-preview.js?v=22"></script>
+<script src="assets/site.js?v=22"></script>
+
+<header class="page-head">
+  <div class="wrap">
+    <div class="eyebrow">The wish lists</div>
+    <h1 class="display">What shelters are wishing for</h1>
+    <p>Every item below is on a real shelter's wish list on Chewy, read from its public page. When the fund reaches a shelter, its wishes are bought as the same items on Amazon and delivered to it. Chewy's own brands (Frisco and a few others) aren't shown: they're sold only on Chewy, so they can't be bought on Amazon.</p>
+    <div class="chips">
+      <a class="chip" href="https://www.chewy.com/g/animal-shelters-and-rescues" target="_blank" rel="noopener">Lists hosted on <img src="https://upload.wikimedia.org/wikipedia/commons/6/63/Chewy_pet_food_logo.svg" alt="Chewy"> ↗</a>
+      <span class="chip">Matched on <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon" style="height:14px;margin-top:4px"></span>
+      <span class="chip">Bought through <img class="ico" src="https://www.sp3nd.shop/icons/icon-180x180.png" alt=""> <b>SP3ND</b></span>
+      <span class="chip">Paid in <img src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Circle_USDC_Logo.svg" alt=""> <b>USDC</b></span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap pg">
+  <div class="filters">
+    <label class="search"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6b8592" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="q" type="search" placeholder="Search an item, brand or shelter" autocomplete="off"></label>
+    <select class="select" id="kind">
+      <option value="">Every kind</option><option value="food">Food</option><option value="treats">Treats</option><option value="litter">Litter</option>
+      <option value="toys">Toys</option><option value="beds">Beds &amp; bedding</option><option value="care">Care &amp; cleaning</option><option value="other">Other</option>
+    </select>
+    <select class="select" id="st"><option value="">Every state</option></select>
+    <select class="select" id="sort">
+      <option value="need">Biggest lists first</option><option value="low">Lowest price</option><option value="high">Highest price</option>
+    </select>
+    <span class="count" id="count"></span>
+  </div>
+  <div class="wish-grid" id="grid"></div>
+  <button class="more" id="more" hidden>Show more wishes</button>
+</main>
+
+<script src="shelters-data.js"></script>
+<script src="wishes-data.js"></script>
+<script>
+const $ = s => document.querySelector(s);
+const STATES = {AL:"Alabama",AK:"Alaska",AZ:"Arizona",AR:"Arkansas",CA:"California",CO:"Colorado",CT:"Connecticut",DE:"Delaware",DC:"District of Columbia",FL:"Florida",GA:"Georgia",HI:"Hawaii",ID:"Idaho",IL:"Illinois",IN:"Indiana",IA:"Iowa",KS:"Kansas",KY:"Kentucky",LA:"Louisiana",ME:"Maine",MD:"Maryland",MA:"Massachusetts",MI:"Michigan",MN:"Minnesota",MS:"Mississippi",MO:"Missouri",MT:"Montana",NE:"Nebraska",NV:"Nevada",NH:"New Hampshire",NJ:"New Jersey",NM:"New Mexico",NY:"New York",NC:"North Carolina",ND:"North Dakota",OH:"Ohio",OK:"Oklahoma",OR:"Oregon",PA:"Pennsylvania",RI:"Rhode Island",SC:"South Carolina",SD:"South Dakota",TN:"Tennessee",TX:"Texas",UT:"Utah",VT:"Vermont",VA:"Virginia",WA:"Washington",WV:"West Virginia",WI:"Wisconsin",WY:"Wyoming"};
+
+const SH = {};
+(window.SHELTERS || []).forEach(([slug,name,city,st,w,logo]) => SH[slug] = {name,city,st,logo});
+// Chewy's own brands are sold only on Chewy, so they can't be bought on Amazon: leave them out
+const CHEWY_ONLY = /^(frisco|american journey|tylee'?s|vibeful|onesie|chewy|wellness bowls by chewy)\b/i;
+const SHW = {}; (window.SHELTERS || []).forEach(r => SHW[r[0]] = r[4]);
+const ALL = (window.WISHES || []).filter(w => !CHEWY_ONLY.test(w[1]))
+  .map(([slug,n,p,need,img,kind]) => ({ n, p, need, img, kind, slug, list: SHW[slug] || 0, s: SH[slug] || {name:slug, city:"", st:"", logo:""} }));
+
+const used = [...new Set(ALL.map(w => w.s.st).filter(Boolean))].sort((a,b)=>STATES[a].localeCompare(STATES[b]));
+$("#st").innerHTML += used.map(st => `<option value="${st}">${STATES[st]}</option>`).join("");
+
+const params = new URLSearchParams(location.search);
+if (params.get("state")) $("#st").value = params.get("state");
+
+let cur = [], shown = 0;
+const PAGE = 24;
+const card = w => `
+  <a class="wish" href="https://www.chewy.com/g/${w.slug}#wish-list" target="_blank" rel="noopener" title="Open ${esc(w.s.name)}'s wish list on Chewy">
+    <div class="ph">${w.need ? '<span class="need">MOST NEEDED</span>' : ''}<img src="${esc(w.img)}" alt="${esc(w.n)}" loading="lazy"></div>
+    <h4>${esc(w.n)}</h4><div class="pr">$${w.p.toFixed(2)}</div>
+    <div class="who">${w.s.logo ? `<img src="${esc(w.s.logo)}" alt="" loading="lazy">` : `<span class="av" style="background:${avColor(w.s.name)}">${initials(w.s.name)}</span>`}
+      <span><b>${esc(w.s.name)}</b>${esc(w.s.city)}${w.s.city ? ", " : ""}${w.s.st}</span></div>
+  </a>`;
+
+function render(){
+  const q = $("#q").value.trim().toLowerCase(), k = $("#kind").value, st = $("#st").value, sort = $("#sort").value;
+  cur = ALL.filter(w => (!k || w.kind === k) && (!st || w.s.st === st) &&
+    (!q || (w.n + " " + w.s.name + " " + w.s.city).toLowerCase().includes(q)));
+  cur.sort(sort === "low" ? (a,b)=>a.p-b.p : sort === "high" ? (a,b)=>b.p-a.p : (a,b)=>(b.need-a.need) || (b.list-a.list) || (a.p-b.p));
+  shown = 0; $("#grid").innerHTML = "";
+  const nShelters = new Set(cur.map(w=>w.slug)).size;
+  $("#count").textContent = `${cur.length.toLocaleString("en-US")} wishes · ${nShelters} shelters`;
+  if (!cur.length) $("#grid").innerHTML = `<div class="none">No wishes match. Try another item, kind or state.</div>`;
+  more();
+}
+function more(){
+  $("#grid").insertAdjacentHTML("beforeend", cur.slice(shown, shown + PAGE).map(card).join(""));
+  shown = Math.min(cur.length, shown + PAGE);
+  $("#more").hidden = shown >= cur.length;
+  $("#more").textContent = `Show more wishes (${(cur.length - shown).toLocaleString("en-US")} left)`;
+}
+["q","kind","st","sort"].forEach(id => $("#"+id).addEventListener(id === "q" ? "input" : "change", render));
+$("#more").onclick = more;
+render();
+</script>
+</body>
+</html>

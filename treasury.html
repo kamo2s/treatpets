@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Treasury — Treat</title>
+<meta name="description" content="The $TREAT treasury: the wallets, every creator-fee claim, every swap into the wish fund and every payment for wishes." />
+<link rel="icon" type="image/webp" href="assets/logo-paw.webp?v=1" />
+<link rel="apple-touch-icon" href="assets/logo-paw.webp?v=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/site.css?v=22" />
+</head>
+<body data-page="treasury">
+<script src="assets/data.js?v=22"></script>
+<script src="assets/local-preview.js?v=22"></script>
+<script src="assets/site.js?v=22"></script>
+
+<header class="page-head">
+  <div class="wrap">
+    <div class="eyebrow">Treasury</div>
+    <h1 class="display">Every dollar, on chain</h1>
+    <p>The wallets the money moves through, and every claim, swap and payment with its transaction. Orders are paid from the treasury in USDC on Solana; each order on the Granted page shows its payment and the rest of its proof.</p>
+    <div class="chips">
+      <span class="chip">Fees from <img class="ico" src="https://upload.wikimedia.org/wikipedia/commons/b/bd/Pump_fun_logo.png" alt=""> <b>pump.fun</b></span>
+      <span class="chip">Held in <img src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Circle_USDC_Logo.svg" alt=""> <b>USDC</b></span>
+      <span class="chip">Recorded on <svg viewBox="0 0 398 312" aria-hidden="true"><use href="#sol"/></svg> <b>Solana</b></span>
+      <span class="chip">Orders paid to <img class="ico" src="https://www.sp3nd.shop/icons/icon-180x180.png" alt=""> <b>SP3ND</b></span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap pg">
+  <div class="stats inner">
+    <div class="stat"><span>Fees claimed</span><strong id="tClaimed">0 SOL</strong><em id="tClaims">0 claims</em></div>
+    <div class="stat"><span>Into the wish fund</span><strong id="tFund">$0</strong><em id="tSwaps">0 swaps</em></div>
+    <div class="stat"><span>Spent on wishes</span><strong id="tSpent">$0</strong><em id="tOrders">0 orders</em></div>
+    <div class="stat"><span>Wish fund now</span><strong id="tNow">$0</strong><em>USDC ready for the next order</em></div>
+  </div>
+
+  <div class="split" style="margin-top:40px">
+    <svg class="ring" viewBox="0 0 42 42">
+      <circle cx="21" cy="21" r="15.9" fill="none" stroke="#e2edf1" stroke-width="6"/>
+      <circle id="ringFund" cx="21" cy="21" r="15.9" fill="none" stroke="#06b6d4" stroke-width="6" stroke-dasharray="90 10" stroke-dashoffset="25"/>
+    </svg>
+    <div class="legend">
+      <div><i style="background:#06b6d4"></i><b id="fundPct">90%</b>&nbsp;of fees → wish fund (shelter items, tax, shipping)</div>
+      <div><i style="background:#e2edf1"></i><b id="teamPct">10%</b>&nbsp;of fees → team (servers, searches, upkeep)</div>
+    </div>
+  </div>
+
+  <h3 class="sec display">The wallets</h3>
+  <p class="sec-sub">Open any address on Solscan to see every transaction it has ever made.</p>
+  <div class="wallets" id="wallets"></div>
+
+  <h3 class="sec display">Payments for wishes</h3>
+  <p class="sec-sub">Each one is a USDC transfer from the treasury to SP3ND. Its memo carries the SP3ND order number, so the transaction points to exactly one order.</p>
+  <div class="tbl"><table><thead><tr><th>Order</th><th>When</th><th>Shelter</th><th>USDC</th><th>Transaction</th></tr></thead><tbody id="tPay"></tbody></table></div>
+
+  <h3 class="sec display">Creator fee claims</h3>
+  <div class="tbl"><table><thead><tr><th>When</th><th>SOL</th><th>Transaction</th></tr></thead><tbody id="tClaimRows"></tbody></table></div>
+
+  <h3 class="sec display">Swaps into the wish fund</h3>
+  <div class="tbl"><table><thead><tr><th>When</th><th>Fees in</th><th>To the team</th><th>USDC to the fund</th><th>Transaction</th></tr></thead><tbody id="tSwapRows"></tbody></table></div>
+</main>
+
+<script>
+const $ = s => document.querySelector(s);
+const usd = v => "$" + v.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+const sol = v => v.toLocaleString("en-US",{maximumFractionDigits:3}) + " SOL";
+const link = u => `<a class="lnk" href="${u}" target="_blank" rel="noopener">Solscan ↗</a>`;
+const empty = (cols, msg) => `<tr><td class="empty-row" colspan="${cols}">${msg}</td></tr>`;
+const C = CONFIG, f = C.fundShare;
+
+$("#fundPct").textContent = f + "%"; $("#teamPct").textContent = (100 - f) + "%";
+$("#ringFund").setAttribute("stroke-dasharray", `${f} ${100 - f}`);
+
+const claimed = C.feeClaims.reduce((a,c)=>a+c.sol,0);
+const toFund = C.swaps.reduce((a,s)=>a+s.fund,0);
+const spent = C.orders.reduce((a,o)=>a+o.usdc,0);
+$("#tClaimed").textContent = sol(claimed); $("#tClaims").textContent = `${C.feeClaims.length} claims`;
+$("#tFund").textContent = usd(toFund); $("#tSwaps").textContent = `${C.swaps.length} swaps`;
+$("#tSpent").textContent = usd(spent); $("#tOrders").textContent = `${C.orders.length} orders`;
+$("#tNow").textContent = usd(C.stats.fund);
+
+const W = [["treasury","Treasury","Receives the creator fees and holds the wish fund in USDC."],
+           ["team","Team share","Receives the " + (100-f) + "% that pays for running it."],
+           ["sp3nd","SP3ND","Where orders are paid. Each payment's memo names its order."]];
+$("#wallets").innerHTML = W.map(([k,label,desc]) => { const a = C.wallets[k]; return `
+  <div class="wallet"><span>${label}</span>
+    <code>${a ? esc(a) : "Published at launch"}</code>
+    <p>${desc}</p>
+    ${a ? `<p style="margin-top:8px"><a class="lnk" href="https://solscan.io/account/${a}" target="_blank" rel="noopener">View on Solscan ↗</a></p>` : ""}</div>`; }).join("");
+
+$("#tPay").innerHTML = C.orders.length ? C.orders.map(o => `<tr><td><b>${esc(o.id)}</b></td><td>${esc(o.date)}</td><td>${esc(o.shelter)}</td><td>${usd(o.usdc)}</td><td>${link(o.tx)}</td></tr>`).join("")
+  : empty(5, "No payments yet. The first one appears here as soon as the fund covers the next shelter's order.");
+$("#tClaimRows").innerHTML = C.feeClaims.length ? C.feeClaims.map(c => `<tr><td>${esc(c.date)}</td><td>${sol(c.sol)}</td><td>${link(c.tx)}</td></tr>`).join("")
+  : empty(3, "No fee claims yet.");
+$("#tSwapRows").innerHTML = C.swaps.length ? C.swaps.map(s => `<tr><td>${esc(s.date)}</td><td>${sol(s.sol)}</td><td>${usd(s.team)}</td><td><b>${usd(s.fund)}</b></td><td>${link(s.tx)}</td></tr>`).join("")
+  : empty(5, "No swaps yet.");
+</script>
+</body>
+</html>

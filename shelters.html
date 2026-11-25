@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Shelters — Treat</title>
+<meta name="description" content="US shelters and rescues that keep a public wish list on Chewy. Their wishes are bought and delivered with $TREAT creator fees." />
+<link rel="icon" type="image/webp" href="assets/logo-paw.webp?v=1" />
+<link rel="apple-touch-icon" href="assets/logo-paw.webp?v=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/site.css?v=22" />
+<style>
+  :root{
+    --cyan:#06b6d4; --cyan-2:#22d3ee; --cyan-3:#67e8f9; --cyan-4:#a5f3fc; --cyan-5:#cffafe; --cyan-6:#ecfeff;
+    --cyan-deep:#0891b2; --cyan-ink:#0e7490;
+    --ink:#0b1f2a; --ink-2:#3b5563; --ink-3:#6b8592; --line:#e2edf1; --bg:#fff; --bg-2:#f6fbfc;
+    /* map scale: none → 5 steps */
+    --m0:#eef2f4; --m1:#cffafe; --m2:#a5f3fc; --m3:#67e8f9; --m4:#22d3ee; --m5:#0891b2;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:Inter,system-ui,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1140px;margin:0 auto;padding:0 20px}
+  .display{font-family:"Space Grotesk",Inter,sans-serif;letter-spacing:-.035em}
+  .eyebrow{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan-deep)}
+  .muted{color:var(--ink-3);font-size:13px}
+
+
+  header.page{padding:64px 0 26px}
+  header.page h1{font-size:clamp(34px,5vw,54px);line-height:1.05;margin:12px 0 14px}
+  header.page p{max-width:620px;color:var(--ink-2);font-size:17px;line-height:1.6;margin:0}
+  .chips{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+  .chip{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border:1px solid var(--line);border-radius:999px;font-size:13px;color:var(--ink-2);background:#fff}
+  .chip img{height:18px}
+  .chip:hover{border-color:var(--cyan-3)}
+
+  /* MAP CARD */
+  .mapcard{border:1px solid var(--line);border-radius:22px;padding:22px;display:grid;grid-template-columns:1fr 250px;gap:22px;position:relative}
+  .mapcard .top{grid-column:1/-1;font-size:14px;color:var(--ink-2)}
+  .mapcard .top b{color:var(--ink);font-size:15px;margin-right:4px}
+  .mapbox{position:relative;display:flex;gap:10px}
+  #map{width:100%;height:auto;display:block;flex:1;min-width:0}
+  #map path.st{stroke:#fff;stroke-width:1.2;cursor:pointer;transition:filter .15s}
+  #map path.st:hover,#map path.st.hl{filter:brightness(.9);stroke:var(--ink);stroke-width:1.6}
+  #map path.st.sel{stroke:var(--ink);stroke-width:2}
+  #map text{font:700 15px Inter;fill:var(--ink);pointer-events:none;text-anchor:middle}
+  #map text.n{font-weight:500;font-size:13px;fill:var(--ink-2)}
+  #map text.dark{fill:#fff}
+  .smalls{display:flex;flex-direction:column;gap:6px;justify-content:center}
+  .smalls button{width:44px;height:24px;border:0;border-radius:6px;font:700 10px Inter;color:var(--ink);cursor:pointer}
+  .smalls button:hover,.smalls button.sel{outline:2px solid var(--ink)}
+  .legend{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;font-size:12px;color:var(--ink-3)}
+  .legend b{color:var(--ink);font-size:12px;margin-right:4px}
+  .legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-2px}
+
+  .rank h5{margin:4px 0 10px;font-size:11px;letter-spacing:.1em;color:var(--ink-3)}
+  .rank button{display:grid;grid-template-columns:24px 1fr auto;gap:10px;align-items:center;width:100%;border:0;background:none;padding:7px 4px;border-radius:8px;cursor:pointer;text-align:left;font:500 14px Inter;color:var(--ink)}
+  .rank button:hover{background:var(--cyan-6)}
+  .rank img{width:24px;height:16px;object-fit:cover;border-radius:2px;box-shadow:0 0 0 1px rgba(0,0,0,.08)}
+  .rank .bar{grid-column:2/4;height:3px;border-radius:2px;background:var(--cyan-4);margin-top:-2px}
+  .rank b{font-weight:600;font-variant-numeric:tabular-nums}
+
+  /* TOOLTIP */
+  .tip{position:absolute;z-index:20;width:300px;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 18px 40px rgba(11,31,42,.14);padding:14px;pointer-events:none;opacity:0;transform:translateY(6px);transition:opacity .12s,transform .12s}
+  .tip.on{opacity:1;transform:none}
+  .tip h4{margin:0;display:flex;align-items:center;gap:8px;font-size:16px}
+  .tip h4 img{width:26px;height:17px;object-fit:cover;border-radius:2px;box-shadow:0 0 0 1px rgba(0,0,0,.08)}
+  .tip .sub{font-size:12px;color:var(--ink-3);margin:4px 0 10px}
+  .tip .row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .tip .s{font-size:11px;line-height:1.3}
+  .tip .s .lg{height:64px;border:1px solid var(--line);border-radius:10px;display:grid;place-items:center;background:#fff;margin-bottom:6px;overflow:hidden}
+  .tip .s .lg img{max-width:80%;max-height:52px;object-fit:contain}
+  .tip .s b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .tip .s span{color:var(--ink-3)}
+  .tip .empty{font-size:13px;color:var(--ink-3)}
+
+  /* LIST */
+  .controls{display:flex;gap:12px;align-items:center;margin:28px 0 18px;flex-wrap:wrap}
+  .search{flex:1;min-width:240px;max-width:340px;display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:999px;padding:0 16px;height:44px}
+  .search input{border:0;outline:0;font:500 14px Inter;flex:1;background:none;color:var(--ink)}
+  .search:focus-within,.sel-st:focus{border-color:var(--cyan)}
+  .sel-st{height:44px;border:1px solid var(--line);border-radius:999px;padding:0 16px;font:600 14px Inter;color:var(--ink);background:#fff;cursor:pointer}
+  .count{margin-left:auto;font-size:13px;color:var(--ink-3)}
+  .clear{border:0;background:var(--cyan-6);color:var(--cyan-ink);font:600 13px Inter;border-radius:999px;padding:8px 14px;cursor:pointer}
+  .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+  .card{display:flex;gap:14px;align-items:center;border:1px solid var(--line);border-radius:18px;padding:14px;background:#fff;transition:transform .15s,box-shadow .15s,border-color .15s}
+  .card:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(8,145,178,.1);border-color:var(--cyan-3)}
+  .card .lg{flex:none;width:58px;height:58px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;overflow:hidden;background:#fff}
+  .card .lg img{width:100%;height:100%;object-fit:contain;padding:4px}
+  .av{width:100%;height:100%;display:grid;place-items:center;color:#fff;font:700 15px Inter}
+  .card .info{min-width:0;flex:1}
+  .card h4{margin:0 0 3px;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .card .meta{display:flex;justify-content:space-between;gap:8px;font-size:13px;color:var(--ink-3)}
+  .card .w{color:var(--cyan-deep);font-weight:600;white-space:nowrap}
+  .more{display:block;margin:24px auto 0;border:1px solid var(--line);background:#fff;border-radius:999px;padding:12px 22px;font:600 14px Inter;cursor:pointer}
+  .more:hover{border-color:var(--cyan)}
+  .none{grid-column:1/-1;text-align:center;padding:40px;color:var(--ink-3)}
+
+
+  @media (max-width:960px){
+    .mapcard{grid-template-columns:1fr}
+    .rank{display:grid;grid-template-columns:1fr 1fr;column-gap:20px}
+    .rank h5{grid-column:1/-1}
+    .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  }
+  @media (max-width:640px){
+    .grid{grid-template-columns:minmax(0,1fr)}
+    .rank{grid-template-columns:1fr}
+    .tip{display:none}
+    .smalls{flex-direction:row;flex-wrap:wrap}
+    .mapbox{flex-direction:column}
+    .count{margin-left:0;width:100%}
+  }
+</style>
+</head>
+<body data-page="shelters">
+<script src="assets/data.js?v=22"></script>
+<script src="assets/local-preview.js?v=22"></script>
+<script src="assets/site.js?v=22"></script>
+
+<header class="page">
+  <div class="wrap">
+    <div class="eyebrow">The shelters</div>
+    <h1 class="display">Shelters and rescues on the list</h1>
+    <p>Nonprofit shelters and rescues in the US that keep a public wish list on Chewy. Their wishes are bought on Amazon with the creator fees of $TREAT and delivered to their door.</p>
+    <div class="chips">
+      <a class="chip" href="https://www.chewy.com/g/animal-shelters-and-rescues" target="_blank" rel="noopener">Wish lists hosted on <img src="https://upload.wikimedia.org/wikipedia/commons/6/63/Chewy_pet_food_logo.svg" alt="Chewy"> ↗</a>
+      <span class="chip">Delivered by <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon" style="height:15px;margin-top:4px"></span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="mapcard" id="mapcard">
+    <div class="top"><b id="tot">0</b> shelters in <span id="nst">0</span> states. Pick a state to see its shelters.</div>
+    <div class="mapbox">
+      <svg id="map" viewBox="0 0 975 610" role="img" aria-label="Map of US states shaded by number of shelters"></svg>
+      <div class="smalls" id="smalls"></div>
+    </div>
+    <div class="rank" id="rank"><h5>MOST SHELTERS</h5></div>
+    <div class="legend" id="legend"></div>
+    <div class="tip" id="tip"></div>
+  </div>
+
+  <div class="controls" id="list">
+    <label class="search"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6b8592" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="q" type="search" placeholder="Search a shelter or city" autocomplete="off"></label>
+    <select class="sel-st" id="st"><option value="">Every state</option></select>
+    <button class="clear" id="clear" hidden>Clear filters</button>
+    <span class="count" id="count"></span>
+  </div>
+  <div class="grid" id="grid"></div>
+  <button class="more" id="more" hidden>Show more shelters</button>
+</main>
+
+<script src="shelters-data.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
+<script>
+const $ = s => document.querySelector(s);
+const fmt = n => n.toLocaleString("en-US");
+
+const STATES = {AL:"Alabama",AK:"Alaska",AZ:"Arizona",AR:"Arkansas",CA:"California",CO:"Colorado",CT:"Connecticut",DE:"Delaware",DC:"District of Columbia",FL:"Florida",GA:"Georgia",HI:"Hawaii",ID:"Idaho",IL:"Illinois",IN:"Indiana",IA:"Iowa",KS:"Kansas",KY:"Kentucky",LA:"Louisiana",ME:"Maine",MD:"Maryland",MA:"Massachusetts",MI:"Michigan",MN:"Minnesota",MS:"Mississippi",MO:"Missouri",MT:"Montana",NE:"Nebraska",NV:"Nevada",NH:"New Hampshire",NJ:"New Jersey",NM:"New Mexico",NY:"New York",NC:"North Carolina",ND:"North Dakota",OH:"Ohio",OK:"Oklahoma",OR:"Oregon",PA:"Pennsylvania",RI:"Rhode Island",SC:"South Carolina",SD:"South Dakota",TN:"Tennessee",TX:"Texas",UT:"Utah",VT:"Vermont",VA:"Virginia",WA:"Washington",WV:"West Virginia",WI:"Wisconsin",WY:"Wyoming"};
+const FIPS = {"01":"AL","02":"AK","04":"AZ","05":"AR","06":"CA","08":"CO","09":"CT","10":"DE","11":"DC","12":"FL","13":"GA","15":"HI","16":"ID","17":"IL","18":"IN","19":"IA","20":"KS","21":"KY","22":"LA","23":"ME","24":"MD","25":"MA","26":"MI","27":"MN","28":"MS","29":"MO","30":"MT","31":"NE","32":"NV","33":"NH","34":"NJ","35":"NM","36":"NY","37":"NC","38":"ND","39":"OH","40":"OK","41":"OR","42":"PA","44":"RI","45":"SC","46":"SD","47":"TN","48":"TX","49":"UT","50":"VT","51":"VA","53":"WA","54":"WV","55":"WI","56":"WY"};
+const SMALL = ["VT","NH","MA","RI","CT","NJ","DE","MD","DC"];
+const flag = st => {
+  const f = {GA:"Georgia_(U.S._state)", DC:"the_District_of_Columbia"}[st] || STATES[st].replace(/ /g,"_");
+  return `https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_${f}.svg?width=60`;
+};
+const logoHTML = s => s.logo
+  ? `<img src="${esc(s.logo)}" alt="${esc(s.name)} logo" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'av',textContent:'${initials(s.name)}',style:'background:${avColor(s.name)}'}))">`
+  : `<span class="av" style="background:${avColor(s.name)}">${initials(s.name)}</span>`;
+
+// ---- data ----
+const ALL = (window.SHELTERS || []).map(([slug,name,city,st,w,logo]) => ({slug,name,city,st,w,logo,url:`https://www.chewy.com/g/${slug}`})).filter(s => STATES[s.st]);
+const byState = {};
+ALL.forEach(s => (byState[s.st] ||= []).push(s));
+Object.values(byState).forEach(a => a.sort((x,y)=>y.w-x.w));
+const count = st => (byState[st]||[]).length;
+const wishes = st => (byState[st]||[]).reduce((a,s)=>a+s.w,0);
+$("#tot").textContent = fmt(ALL.length);
+$("#nst").textContent = Object.keys(byState).length;
+
+// color buckets scale to the data
+// quantile steps so the colours spread evenly across states
+const counts = Object.keys(STATES).map(count).filter(n => n > 0).sort((a,b)=>a-b);
+const q = p => counts[Math.min(counts.length-1, Math.floor(counts.length*p))] || 1;
+const steps = [1, q(.2), q(.4), q(.6), q(.8)].map((v,i,a)=> i && v <= a[i-1] ? a[i-1]+1 : v);
+const bucket = n => n === 0 ? 0 : n < steps[1] ? 1 : n < steps[2] ? 2 : n < steps[3] ? 3 : n < steps[4] ? 4 : 5;
+const fill = st => `var(--m${bucket(count(st))})`;
+$("#legend").innerHTML = `<b>Shelters per state</b>` +
+  [["none",0],[`1–${steps[1]-1}`,1],[`${steps[1]}–${steps[2]-1}`,2],[`${steps[2]}–${steps[3]-1}`,3],[`${steps[3]}–${steps[4]-1}`,4],[`${steps[4]}+`,5]]
+  .map(([l,i])=>`<span><i style="background:var(--m${i})"></i>${l}</span>`).join("");
+
+// ranking
+const topStates = Object.keys(byState).sort((a,b)=>count(b)-count(a)).slice(0,10);
+$("#rank").innerHTML += topStates.map(st => `
+  <button data-st="${st}"><img src="${flag(st)}" alt="" loading="lazy"><span>${STATES[st]}</span><b>${fmt(count(st))}</b>
+  <span class="bar" style="width:${Math.max(6, count(st)/count(topStates[0])*100)}%"></span></button>`).join("");
+
+// small states
+$("#smalls").innerHTML = SMALL.map(st => `<button data-st="${st}" style="background:${fill(st)}" title="${STATES[st]}">${st}</button>`).join("");
+
+// state select
+$("#st").innerHTML += Object.keys(STATES).sort((a,b)=>STATES[a].localeCompare(STATES[b]))
+  .map(st => `<option value="${st}">${STATES[st]} (${count(st)})</option>`).join("");
+
+// ---- tooltip ----
+const tip = $("#tip"), card = $("#mapcard");
+function showTip(st, ev){
+  const list = byState[st] || [];
+  tip.innerHTML = `<h4><img src="${flag(st)}" alt="">${STATES[st]}</h4>
+    <div class="sub">${fmt(list.length)} shelter${list.length===1?"":"s"} · ${fmt(wishes(st))} open wishes</div>
+    ${list.length ? `<div class="row">${list.slice(0,3).map(s=>`<div class="s"><div class="lg">${s.logo?`<img src="${esc(s.logo)}" alt="">`:`<span class="av" style="background:${avColor(s.name)};border-radius:8px">${initials(s.name)}</span>`}</div><b>${esc(s.name)}</b><span>${esc(s.city)} · ${s.w} wishes</span></div>`).join("")}</div>` : `<div class="empty">No shelters from this state on the list yet.</div>`}`;
+  moveTip(ev); tip.classList.add("on");
+}
+function moveTip(ev){
+  const r = card.getBoundingClientRect();
+  let x = ev.clientX - r.left + 16, y = ev.clientY - r.top + 16;
+  if (x + 310 > r.width) x = ev.clientX - r.left - 316;
+  if (y + 240 > r.height) y = Math.max(10, r.height - 250);
+  tip.style.left = x + "px"; tip.style.top = y + "px";
+}
+const hideTip = () => tip.classList.remove("on");
+
+// ---- map ----
+fetch("https://cdn.jsdelivr.net/npm/us-atlas@3.0.1/states-albers-10m.json").then(r=>r.json()).then(us => {
+  const svg = d3.select("#map"), path = d3.geoPath();
+  const feats = topojson.feature(us, us.objects.states).features;
+  svg.append("g").selectAll("path").data(feats).join("path")
+    .attr("class","st").attr("d", path)
+    .attr("data-st", d => FIPS[d.id])
+    .style("fill", d => fill(FIPS[d.id]))
+    .on("mouseenter", (ev,d) => showTip(FIPS[d.id], ev))
+    .on("mousemove", moveTip).on("mouseleave", hideTip)
+    .on("click", (ev,d) => pickState(FIPS[d.id], true));
+  svg.append("path").attr("d", path(topojson.mesh(us, us.objects.states, (a,b)=>a!==b))).attr("fill","none").attr("stroke","#fff").attr("stroke-width",.6).attr("pointer-events","none");
+  const g = svg.append("g");
+  feats.forEach(d => {
+    const st = FIPS[d.id]; if (!st || SMALL.includes(st)) return;
+    const [x,y] = path.centroid(d); const dark = bucket(count(st)) >= 5;
+    const nudge = {FL:[18,10],LA:[-8,0],MI:[12,22],KY:[6,2],CA:[-8,0],ID:[0,14],HI:[6,-4],AK:[0,0]}[st] || [0,0];
+    g.append("text").attr("x",x+nudge[0]).attr("y",y+nudge[1]).attr("class",dark?"dark":"").text(st);
+    g.append("text").attr("x",x+nudge[0]).attr("y",y+nudge[1]+15).attr("class","n"+(dark?" dark":"")).text(count(st)||"");
+  });
+});
+
+// small-state + ranking hover/click
+document.querySelectorAll("#smalls button, #rank button").forEach(b => {
+  b.addEventListener("mouseenter", ev => { showTip(b.dataset.st, ev); document.querySelector(`#map path[data-st=${b.dataset.st}]`)?.classList.add("hl"); });
+  b.addEventListener("mousemove", moveTip);
+  b.addEventListener("mouseleave", () => { hideTip(); document.querySelectorAll("#map path.hl").forEach(p=>p.classList.remove("hl")); });
+  b.addEventListener("click", () => pickState(b.dataset.st, true));
+});
+
+// ---- list ----
+let shown = 0, current = [];
+const PAGE = 24;
+function cardHTML(s){
+  return `<a class="card" href="${s.url}" target="_blank" rel="noopener">
+    <span class="lg">${logoHTML(s)}</span>
+    <span class="info"><h4>${esc(s.name)}</h4>
+      <span class="meta"><span>${esc(s.city)}${s.city?", ":""}${s.st}</span><span class="w">${s.w} wish${s.w===1?"":"es"} ↗</span></span></span></a>`;
+}
+function render(){
+  const q = $("#q").value.trim().toLowerCase(), st = $("#st").value;
+  current = ALL.filter(s => (!st || s.st === st) && (!q || (s.name+" "+s.city+" "+STATES[s.st]).toLowerCase().includes(q)));
+  shown = 0; $("#grid").innerHTML = "";
+  $("#count").textContent = `${fmt(current.length)} shelter${current.length===1?"":"s"}`;
+  $("#clear").hidden = !q && !st;
+  document.querySelectorAll("#map path.sel, #smalls .sel").forEach(e=>e.classList.remove("sel"));
+  if (st) { document.querySelector(`#map path[data-st=${st}]`)?.classList.add("sel"); document.querySelector(`#smalls [data-st=${st}]`)?.classList.add("sel"); }
+  if (!current.length) $("#grid").innerHTML = `<div class="none">No shelters match. Try another name, city or state.</div>`;
+  more();
+}
+function more(){
+  $("#grid").insertAdjacentHTML("beforeend", current.slice(shown, shown + PAGE).map(cardHTML).join(""));
+  shown = Math.min(current.length, shown + PAGE);
+  $("#more").hidden = shown >= current.length;
+  $("#more").textContent = `Show more shelters (${fmt(current.length - shown)} left)`;
+}
+function pickState(st, scroll){
+  $("#st").value = st; render();
+  if (scroll) $("#list").scrollIntoView({behavior:"smooth", block:"start"});
+}
+$("#q").addEventListener("input", render);
+$("#st").addEventListener("change", render);
+$("#more").addEventListener("click", more);
+$("#clear").addEventListener("click", () => { $("#q").value = ""; $("#st").value = ""; render(); });
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Treat — shelter pets make a wish list, $TREAT fills it</title>
+<meta name="description" content="The creator fees of $TREAT buy the exact items on animal shelters' wish lists and deliver them to their door." />
+<link rel="icon" type="image/webp" href="assets/logo-paw.webp?v=1" />
+<link rel="apple-touch-icon" href="assets/logo-paw.webp?v=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/site.css?v=22" />
+</head>
+<body data-page="home">
+<script src="assets/data.js?v=22"></script>
+<script src="assets/local-preview.js?v=22"></script>
+<script src="assets/site.js?v=22"></script>
+
+<header class="hero">
+  <div class="wrap">
+    <h1 class="display">Shelter pets made a wish list.<br><span class="c"><span data-ticker>$TREAT</span> fills it.</span></h1>
+    <p class="lead">Every animal shelter keeps a wish list: food, beds, toys, litter, medicine. The creator fees of <span data-ticker>$TREAT</span> buy what's on those lists, automatically, and the boxes are delivered to the shelters' doors.</p>
+    <div class="ctas">
+      <a class="btn" href="wishes.html">See the wishes</a>
+      <a class="btn primary" data-buy href="#" target="_blank" rel="noopener">
+        <img class="btn-pf" src="https://upload.wikimedia.org/wikipedia/commons/b/bd/Pump_fun_logo.png" alt="pump.fun" draggable="false"> Buy <span data-ticker>$TREAT</span>
+      </a>
+    </div>
+    <div class="rail">
+      <span class="seg">Wishes from <img class="lg lg-chewy" src="https://upload.wikimedia.org/wikipedia/commons/6/63/Chewy_pet_food_logo.svg" alt="Chewy"> lists</span><i>•</i>
+      <span class="seg">Bought on <img class="lg lg-amazon" src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon"> through <img class="lg ico" src="https://www.sp3nd.shop/icons/icon-180x180.png" alt=""><span class="sp3nd">SP3ND</span></span><i>•</i>
+      <span class="seg">Paid in <img class="lg lg-usdc" src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Circle_USDC_Logo.svg" alt=""> <b>USDC</b> on <svg class="lg lg-sol" viewBox="0 0 398 312" aria-hidden="true"><use href="#sol"/></svg> <b>Solana</b></span>
+    </div>
+    <div class="fan" id="fan" aria-hidden="true"></div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="stats">
+    <div class="stat"><span>Wishes granted</span><strong data-count="granted">0</strong><em id="ordersNote">0 orders paid</em></div>
+    <div class="stat"><span>Paid for shelters</span><strong data-count="paid" data-prefix="$">0</strong><em>in pet supplies</em></div>
+    <div class="stat"><span>Open wishes now</span><strong data-count="open">0</strong><em id="sheltersNote">on shelters' lists</em></div>
+    <div class="stat"><span>Wish fund</span><strong data-count="fund" data-prefix="$" data-dec="2">0</strong><em>USDC from the creator fees</em></div>
+  </div>
+</div>
+
+<section id="why">
+  <div class="wrap">
+    <div class="eyebrow">Why <span data-brand>Treat</span></div>
+    <h2 class="display">Not money a shelter has to claim.<br>The things it asked for, at its door.</h2>
+    <p class="sub">Crypto donations usually arrive as money a charity has to come and get. <span data-brand>Treat</span> never sends money to shelters at all: it buys the exact items they already put on their wish lists and pays the stores directly. The shelter just gets a box. <a class="lnk" href="how-it-works.html">How it works →</a></p>
+    <div class="compare">
+      <div class="col">
+        <div class="hd">Crypto donations, usually</div>
+        <div class="row"><span class="mk">×</span>The charity has to sign up, get verified and claim before anything reaches it.</div>
+        <div class="row"><span class="mk">×</span>Until it does, the money waits.</div>
+        <div class="row"><span class="mk">×</span>Then someone still has to turn the money into food and litter.</div>
+        <div class="row"><span class="mk">×</span>You see a total on a dashboard.</div>
+        <div class="row"><span class="mk">×</span>Someone chooses who gets it.</div>
+      </div>
+      <div class="col us">
+        <div class="hd" data-brand>Treat</div>
+        <div class="row"><span class="mk">✓</span>Nothing to sign up for and nothing to claim. The shelter doesn't need to know we exist.</div>
+        <div class="row"><span class="mk">✓</span>The fund buys as soon as it covers the next shelter's order.</div>
+        <div class="row"><span class="mk">✓</span>The exact items from the shelter's own wish list, delivered to its door.</div>
+        <div class="row"><span class="mk">✓</span>Every step has a link you can check: a dated copy of the list, the USDC payment, the order, the tracking.</div>
+        <div class="row"><span class="mk">✓</span>A fixed rule does: shelters never helped first, items marked most-needed first.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="next" style="padding-top:0">
+  <div class="wrap">
+    <div class="head-row">
+      <div><div class="eyebrow">Being granted now</div><h2 class="display" style="margin-bottom:0">The next wish</h2></div>
+      <a class="lnk" href="wishes.html">Every open wish →</a>
+    </div>
+    <div class="next">
+      <div class="l">
+        <div class="eyebrow">Up next</div>
+        <h3 class="display" id="nextName"></h3>
+        <div class="muted" id="nextMeta"></div>
+        <div class="bar"><i id="nextBar"></i></div>
+        <div class="bar-meta"><span><b id="nextFund">$0</b> <span class="muted">in the fund</span></span><span class="muted"><b id="nextGoal">$0</b> grants these</span></div>
+        <p class="sub" style="font-size:15px;margin-top:22px">The moment the fund covers it, the same items are bought on Amazon, paid in USDC on Solana, and delivered to the shelter. Then the next shelter.</p>
+        <a class="lnk" href="granted.html">The whole queue →</a> &nbsp; <a class="lnk" id="nextChewy" href="#" target="_blank" rel="noopener">Its list on Chewy ↗</a>
+      </div>
+      <div class="r" id="nextItems"></div>
+    </div>
+  </div>
+</section>
+
+<section id="stores" style="padding-top:0">
+  <div class="wrap">
+    <div class="eyebrow">Where the boxes come from</div>
+    <h2 class="display" style="margin-bottom:0">Shelter staples, at real store prices</h2>
+    <p class="sub" style="margin-top:12px">The basics shelters run out of the fastest, from the stores that ship them. Prices are a snapshot and change daily; every card links to the live listing.</p>
+    <div class="tabs" role="tablist" id="storeTabs"></div>
+    <div class="wgrid" id="storeGrid"></div>
+    <div class="storenote" id="storeNote" hidden></div>
+  </div>
+</section>
+
+<section id="granted" style="padding-top:0">
+  <div class="wrap">
+    <div class="head-row">
+      <div><div class="eyebrow">Proof</div><h2 class="display" style="margin-bottom:0">Every order, every box, on the record</h2></div>
+      <a class="lnk" href="granted.html">Every order →</a>
+    </div>
+    <p class="sub" style="margin-top:12px">Open wishes wait in line in the order the fund will buy them. The moment one is paid, its row fills in with the Solscan payment, the store order and the tracking: records you can open yourself.</p>
+    <div class="ledger">
+      <table>
+        <thead><tr><th>Order</th><th>Shelter</th><th>Items</th><th>Amount</th><th>Payment</th><th>Store order</th><th>Status</th></tr></thead>
+        <tbody id="ledgerBody"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="final">
+    <h2 class="display">Every trade drops a ladder in.</h2>
+    <p class="sub" style="margin:0 auto">Buy, sell, or just share it. The fees do the rest.</p>
+    <div class="ctas"><a class="btn primary" data-buy href="#" target="_blank" rel="noopener"><img class="btn-pf" src="https://upload.wikimedia.org/wikipedia/commons/b/bd/Pump_fun_logo.png" alt="pump.fun" draggable="false"> Buy <span data-ticker>$TREAT</span></a><a class="btn" href="wishes.html">See the wishes</a></div>
+    <div class="crew">
+      <span class="pet bob"><img src="assets/pets/dog.webp" alt="" draggable="false"></span>
+      <span class="pet bob d1" style="width:110px;"><img src="assets/pets/cat.webp" alt="" draggable="false"></span>
+      <span class="pet bob d2"><img src="assets/pets/bunny.webp" alt="" draggable="false"></span>
+    </div>
+  </div>
+</div>
+
+<script>
+const $ = s => document.querySelector(s);
+const S = CONFIG.stats;
+$("#ordersNote").textContent = S.ordersPaid ? `${S.ordersPaid} orders paid` : "items bought for shelters";
+$("#sheltersNote").textContent = `on ${S.shelters.toLocaleString("en-US")} shelters' lists`;
+const fmt = (v,d) => v.toLocaleString("en-US",{minimumFractionDigits:d,maximumFractionDigits:d});
+const countUp = el => {
+  const target = S[el.dataset.count], d = +(el.dataset.dec||0), pre = el.dataset.prefix||"", t0 = performance.now();
+  const tick = now => { const k = Math.min(1,(now-t0)/1200), e = 1-Math.pow(1-k,3);
+    el.textContent = pre + fmt(target*e, d); if (k<1) requestAnimationFrame(tick); };
+  requestAnimationFrame(tick);
+};
+
+// hero fan
+$("#fan").innerHTML = CONFIG.fan.map(f => { const x = P(f.p); return `
+  <div class="fcard"><div class="img">${f.badge?`<span class="tag">${f.badge}</span>`:''}${pic(x)}</div>
+  <h4>${esc(x.n)}</h4><small>for ${esc(f.for)}</small><div class="price">$${x.p.toFixed(2)}</div></div>`; }).join("");
+
+// next wish = first shelter in the queue
+const N = { ...CONFIG.queue[0] }, NI = N.items.map(P);
+N.goal = NI.reduce((s,x)=>s+x.p,0) * 1.15; // + est. tax & shipping
+$("#nextName").textContent = N.shelter;
+$("#nextMeta").textContent = `${N.place} · ${NI.length} wishes`;
+$("#nextFund").textContent = "$" + fmt(S.fund,2);
+$("#nextGoal").textContent = "$" + fmt(N.goal,2);
+$("#nextChewy").href = N.page;
+$("#nextItems").innerHTML = NI.map(x => `
+  <a class="item" href="${x.url}" target="_blank" rel="noopener"><div class="ph">${pic(x)}</div><p>${esc(x.n)}</p><b>$${x.p.toFixed(2)}</b></a>`).join("");
+
+// store tabs
+const ST = CONFIG.stores, keys = Object.keys(ST);
+$("#storeTabs").innerHTML = keys.map((k,i) => `<button class="tab" role="tab" data-k="${k}" aria-selected="${i===0}"><img src="${LOGOS[ST[k].logo]}" alt="${ST[k].label}"></button>`).join("");
+const showStore = k => {
+  document.querySelectorAll(".tab").forEach(t => t.setAttribute("aria-selected", t.dataset.k === k));
+  const s = ST[k], grid = $("#storeGrid"), note = $("#storeNote");
+  grid.innerHTML = (s.items||[]).map(P).map(x => `
+    <a class="w" href="${x.url}" target="_blank" rel="noopener">
+      <div class="ph"><span class="ext">↗</span>${pic(x)}<span class="store"><img src="${LOGOS[x.store]}" alt="${x.store}"></span></div>
+      <h4>${esc(x.n)}</h4><div class="pr">${x.p != null ? "$" + x.p.toFixed(2) : '<span class="muted" style="font-weight:600">See price &#8599;</span>'}</div></a>`).join("");
+  grid.hidden = !s.items; note.hidden = !s.note; note.textContent = s.note || "";
+};
+$("#storeTabs").onclick = e => { const t = e.target.closest(".tab"); if (t) showStore(t.dataset.k); };
+showStore(keys[0]);
+
+// orders + queue (real orders first, then shelters waiting in line)
+const money = v => "$" + v.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+const thumbs = it => `<div class="g"><div class="thumbs" style="margin:0">${it.map(x=>`<a href="${x.url}" target="_blank" rel="noopener" title="${esc(x.n)}">${pic(x)}</a>`).join("")}</div></div>`;
+const shelterCell = (name, place, logo, page) => `<a class="shelter" href="${page||"#"}" target="_blank" rel="noopener">${logo ? `<img class="slogo" src="${logo}" alt="${esc(name)} logo" loading="lazy">` : `<span class="av" style="background:${avColor(name)}">${initials(name)}</span>`}<span><b>${esc(name)}</b><div class="muted">${esc(place)}</div></span></a>`;
+$("#ledgerBody").innerHTML =
+  CONFIG.orders.map(o => `
+    <tr><td><b>${esc(o.id)}</b><div class="muted">${esc(o.date)}</div></td>
+    <td>${shelterCell(o.shelter, o.place, o.logo, o.page)}</td>
+    <td>${thumbs(o.items.map(P))}</td>
+    <td><b>${money(o.usdc)}</b> <span class="muted">USDC</span></td>
+    <td><a href="${o.tx}" target="_blank" rel="noopener">Solscan ↗</a></td>
+    <td><a href="${o.storeUrl}" target="_blank" rel="noopener">${esc(o.storeOrder)} ↗</a></td>
+    <td>${o.delivered ? '<span class="pill ok">Delivered</span>' : '<span class="pill">Shipped</span>'} <a href="${o.tracking}" target="_blank" rel="noopener">Track ↗</a></td></tr>`).join("") +
+  CONFIG.queue.map((q,i) => { const it = q.items.map(P), tot = it.reduce((s,x)=>s+x.p,0)*1.15; return `
+    <tr><td><b>Queue #${i+1}</b><div class="muted">${it.length} wish${it.length>1?"es":""}</div></td>
+    <td>${shelterCell(q.shelter, q.place, q.logo, q.page)}</td>
+    <td>${thumbs(it)}</td>
+    <td><b>${money(tot)}</b> <span class="muted">est.</span></td>
+    <td class="muted">Pending</td><td class="muted">Pending</td>
+    <td><span class="pill wait">${i===0 ? "Next up" : "Waiting"}</span></td></tr>`; }).join("");
+
+// reveal on view
+const io = new IntersectionObserver(es => es.forEach(e => {
+  if (!e.isIntersecting) return;
+  if (e.target.dataset.count) countUp(e.target);
+  if (e.target.id === "nextBar") e.target.style.width = Math.min(100, S.fund / N.goal * 100) + "%";
+  io.unobserve(e.target);
+}), {threshold:.4});
+document.querySelectorAll("[data-count]").forEach(el => io.observe(el));
+io.observe($("#nextBar"));
+</script>
+</body>
+</html>

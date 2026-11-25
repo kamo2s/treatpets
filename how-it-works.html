@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>How it works — Treat</title>
+<meta name="description" content="From a $TREAT trade to a box at a shelter's door: every step, who does it, and the record it leaves." />
+<link rel="icon" type="image/webp" href="assets/logo-paw.webp?v=1" />
+<link rel="apple-touch-icon" href="assets/logo-paw.webp?v=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/site.css?v=22" />
+</head>
+<body data-page="how">
+<script src="assets/data.js?v=22"></script>
+<script src="assets/local-preview.js?v=22"></script>
+<script src="assets/site.js?v=22"></script>
+
+<header class="page-head">
+  <div class="wrap">
+    <div class="eyebrow">How it works</div>
+    <h1 class="display">From a trade to a shelter's doorstep</h1>
+    <p><span data-brand>Treat</span> only pays. It never holds an item, never ships anything and never publishes a shelter's address. These services do the rest, and each one leaves a record you can open.</p>
+    <div class="chips">
+      <span class="chip">Fees from <img class="ico" src="https://upload.wikimedia.org/wikipedia/commons/b/bd/Pump_fun_logo.png" alt=""> <b>pump.fun</b></span>
+      <span class="chip">Swapped on <img class="ico" src="https://jup.ag/favicon.svg" alt=""> <b>Jupiter</b></span>
+      <span class="chip">Wishes from <img src="https://upload.wikimedia.org/wikipedia/commons/6/63/Chewy_pet_food_logo.svg" alt="Chewy"></span>
+      <span class="chip">Bought on <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon" style="height:14px;margin-top:4px"> via <img class="ico" src="https://www.sp3nd.shop/icons/icon-180x180.png" alt=""> <b>SP3ND</b></span>
+      <span class="chip">Paid in <img src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Circle_USDC_Logo.svg" alt=""> <b>USDC</b> on <svg viewBox="0 0 398 312" aria-hidden="true"><use href="#sol"/></svg> <b>Solana</b></span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap pg">
+  <div class="flow light">
+    <div class="step"><div class="brands"><img class="sq" src="https://upload.wikimedia.org/wikipedia/commons/b/bd/Pump_fun_logo.png" alt="pump.fun"></div><div class="who">pump.fun</div><h4>Someone trades <span data-ticker>$TREAT</span></h4><p>Every buy and sell pays a small creator fee. All of it goes to the treasury.</p><div class="rec"><b>Record:</b> each fee claim on Solscan</div></div>
+    <div class="step"><div class="brands"><img class="sq" src="https://jup.ag/favicon.svg" alt="Jupiter"><img class="sq" src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Circle_USDC_Logo.svg" alt="USDC"></div><div class="who">Jupiter · USDC</div><h4>The fees become a wish fund</h4><p>The treasury swaps them to USDC. <b id="split">90%</b> goes to the fund, the rest to the team that runs it.</p><div class="rec"><b>Record:</b> each swap on Solscan</div></div>
+    <div class="step"><div class="brands"><img class="word chewy" src="https://upload.wikimedia.org/wikipedia/commons/6/63/Chewy_pet_food_logo.svg" alt="Chewy"></div><div class="who">Chewy</div><h4>A shelter's wishes are picked</h4><p>Shelters keep public wish lists. We only read them and pick the next shelter: never helped first, most needed first.</p><div class="rec"><b>Record:</b> a dated copy on the Wayback Machine</div></div>
+    <div class="step"><div class="brands"><img class="word amazon" src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon"></div><div class="who">Amazon match</div><h4>The same items, found on Amazon</h4><p>Each wish is matched to the same product: same brand, same size, close price.</p><div class="rec"><b>Record:</b> each wish next to its Amazon listing</div></div>
+    <div class="step"><div class="brands"><img class="sq sp3nd" src="https://www.sp3nd.shop/icons/icon-180x180.png" alt="SP3ND"></div><div class="who">SP3ND</div><h4>Paid in USDC, bought by SP3ND</h4><p>SP3ND prices the order with tax and shipping, the treasury pays it in one USDC transaction, and SP3ND buys it on Amazon.</p><div class="rec"><b>Record:</b> the payment on Solscan, memo names the order</div></div>
+    <div class="step"><div class="brands"><img class="word amazon" src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon"></div><div class="who">Delivery</div><h4>Delivered to the shelter</h4><p>Amazon ships the box to the shelter's public address, like any gift from a wish list. The shelter signs up for nothing.</p><div class="rec"><b>Record:</b> order number and carrier tracking</div></div>
+  </div>
+
+  <h3 class="sec display">The rules the fund follows</h3>
+  <p class="sec-sub">No one picks favourites. The same three rules decide every order.</p>
+  <div class="rules">
+    <div class="rule"><b>Never helped first</b><p>Shelters that haven't received a box yet go to the front of the line. Then the ones helped longest ago.</p></div>
+    <div class="rule"><b>Most needed first</b><p>Inside a list, items the shelter marked "Most needed" are bought before everything else.</p></div>
+    <div class="rule"><b>Exact match or skip</b><p>If Amazon doesn't sell the same brand and size at a close price, the wish is skipped. Nothing is swapped for something else.</p></div>
+  </div>
+
+  <h3 class="sec display">Why not just send money?</h3>
+  <div class="compare">
+    <div class="col">
+      <div class="hd">Crypto donations, usually</div>
+      <div class="row"><span class="mk">×</span>The charity has to sign up, get verified and claim before anything reaches it.</div>
+      <div class="row"><span class="mk">×</span>Until it does, the money waits.</div>
+      <div class="row"><span class="mk">×</span>Then someone still has to turn the money into food and litter.</div>
+      <div class="row"><span class="mk">×</span>You see a total on a dashboard.</div>
+      <div class="row"><span class="mk">×</span>Someone chooses who gets it.</div>
+    </div>
+    <div class="col us">
+      <div class="hd" data-brand>Treat</div>
+      <div class="row"><span class="mk">✓</span>Nothing to sign up for and nothing to claim. The shelter doesn't need to know we exist.</div>
+      <div class="row"><span class="mk">✓</span>The fund buys as soon as it covers the next shelter's order.</div>
+      <div class="row"><span class="mk">✓</span>The exact items from the shelter's own wish list, delivered to its door.</div>
+      <div class="row"><span class="mk">✓</span>Every step has a link you can check: a dated copy of the list, the USDC payment, the order, the tracking.</div>
+      <div class="row"><span class="mk">✓</span>A fixed rule does: shelters never helped first, items marked most-needed first.</div>
+    </div>
+  </div>
+
+  <div class="ctas" style="justify-content:flex-start;margin-top:36px">
+    <a class="btn primary" href="wishes.html">See the open wishes</a>
+    <a class="btn" href="granted.html">See the proof</a>
+  </div>
+</main>
+<script>document.getElementById("split").textContent = CONFIG.fundShare + "%";</script>
+</body>
+</html>

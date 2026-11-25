@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Granted — Treat</title>
+<meta name="description" content="Every order the $TREAT wish fund paid, with the USDC payment, the store order and the delivery." />
+<link rel="icon" type="image/webp" href="assets/logo-paw.webp?v=1" />
+<link rel="apple-touch-icon" href="assets/logo-paw.webp?v=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/site.css?v=22" />
+</head>
+<body data-page="granted">
+<script src="assets/data.js?v=22"></script>
+<script src="assets/local-preview.js?v=22"></script>
+<script src="assets/site.js?v=22"></script>
+
+<header class="page-head">
+  <div class="wrap">
+    <div class="eyebrow">Proof</div>
+    <h1 class="display">Every wish granted</h1>
+    <p>Each order the wish fund pays: which shelter, which items, what it cost, the USDC payment on Solana and every step on the way, from the fees to the shelter's door. Shelters waiting in line are listed in the order the fund will buy for them.</p>
+    <div class="chips">
+      <span class="chip">Fees from <img class="ico" src="https://upload.wikimedia.org/wikipedia/commons/b/bd/Pump_fun_logo.png" alt=""> <b>pump.fun</b></span>
+      <span class="chip">Bought through <img class="ico" src="https://www.sp3nd.shop/icons/icon-180x180.png" alt=""> <b>SP3ND</b></span>
+      <span class="chip">Paid in <img src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Circle_USDC_Logo.svg" alt=""> <b>USDC</b></span>
+      <span class="chip">Recorded on <svg viewBox="0 0 398 312" aria-hidden="true"><use href="#sol"/></svg> <b>Solana</b></span>
+      <span class="chip">Delivered by <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon" style="height:14px;margin-top:4px"></span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap pg">
+  <div class="stats inner">
+    <div class="stat"><span>Orders paid</span><strong id="sOrders">0</strong><em id="sDelivered">0 delivered</em></div>
+    <div class="stat"><span>Wishes granted</span><strong id="sWishes">0</strong><em>items on the lists</em></div>
+    <div class="stat"><span>Spent on wishes</span><strong id="sSpent">$0</strong><em>in pet supplies</em></div>
+    <div class="stat"><span>Shelters helped</span><strong id="sShelters">0</strong><em id="sQueue">0 waiting in line</em></div>
+  </div>
+
+  <div class="filters">
+    <div class="seg-tabs" id="statusTabs"></div>
+    <span class="count" id="count"></span>
+  </div>
+
+  <div class="ledger" style="margin-top:0">
+    <table>
+      <thead><tr><th>Order</th><th>Shelter</th><th>Items</th><th>Amount</th><th>Payment</th><th>Store order</th><th>Status</th></tr></thead>
+      <tbody id="ledgerBody"></tbody>
+    </table>
+  </div>
+
+  <h3 class="sec display">What every order shows</h3>
+  <p class="sec-sub">Nothing on this page is typed in by hand. Each cell links to someone else's record you can open yourself.</p>
+  <div class="anatomy">
+    <div><span class="n">01</span><b>The wish list</b>A dated Wayback Machine copy of the shelter's list, taken before buying.</div>
+    <div><span class="n">02</span><b>The fee claim</b>The pump.fun creator-fee claim on Solscan.</div>
+    <div><span class="n">03</span><b>The swap</b>SOL → USDC on Jupiter, with the 90/10 split.</div>
+    <div><span class="n">04</span><b>The payment</b>One USDC transfer to SP3ND. Its memo names the order.</div>
+    <div><span class="n">05</span><b>The order</b>The store order number and the items in it.</div>
+    <div><span class="n">06</span><b>The delivery</b>Carrier tracking, ending in "Delivered" at the shelter.</div>
+  </div>
+</main>
+
+<script>
+const $ = s => document.querySelector(s);
+const money = v => "$" + v.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+const O = CONFIG.orders, Q = CONFIG.queue;
+
+// stats from real orders only
+const wishesGranted = O.reduce((a,o)=>a+o.items.length,0);
+$("#sOrders").textContent = O.length;
+$("#sDelivered").textContent = `${O.filter(o=>o.delivered).length} delivered`;
+$("#sWishes").textContent = wishesGranted;
+$("#sSpent").textContent = money(O.reduce((a,o)=>a+o.usdc,0)).replace(".00","");
+$("#sShelters").textContent = new Set(O.map(o=>o.shelter)).size;
+$("#sQueue").textContent = `${Q.length} waiting in line`;
+
+const thumbs = it => `<div class="g"><div class="thumbs" style="margin:0">${it.map(x=>`<a href="${x.url}" target="_blank" rel="noopener" title="${esc(x.n)}">${pic(x)}</a>`).join("")}</div></div>`;
+const shelterCell = (name, place, logo, page) => `<a class="shelter" href="${page||"#"}" target="_blank" rel="noopener">${logo ? `<img class="slogo" src="${logo}" alt="${esc(name)} logo" loading="lazy">` : `<span class="av" style="background:${avColor(name)}">${initials(name)}</span>`}<span><b>${esc(name)}</b><div class="muted">${esc(place)}</div></span></a>`;
+
+const rows = [
+  ...O.map(o => ({ status: o.delivered ? "delivered" : "shipped", html: `
+    <tr><td><b>${esc(o.id)}</b><div class="muted">${esc(o.date)}</div></td>
+    <td>${shelterCell(o.shelter, o.place, o.logo, o.page)}</td>
+    <td>${thumbs(o.items.map(P))}</td>
+    <td><b>${money(o.usdc)}</b> <span class="muted">USDC</span></td>
+    <td><a href="${o.tx}" target="_blank" rel="noopener">Solscan ↗</a></td>
+    <td><a href="${o.storeUrl}" target="_blank" rel="noopener">${esc(o.storeOrder)} ↗</a></td>
+    <td>${o.delivered ? '<span class="pill ok">Delivered</span>' : '<span class="pill">Shipped</span>'} <a href="${o.tracking}" target="_blank" rel="noopener">Track ↗</a></td></tr>` })),
+  ...Q.map((q,i) => { const it = q.items.map(P), tot = it.reduce((s,x)=>s+x.p,0)*1.15; return { status: "waiting", html: `
+    <tr><td><b>Queue #${i+1}</b><div class="muted">${it.length} wish${it.length>1?"es":""}</div></td>
+    <td>${shelterCell(q.shelter, q.place, q.logo, q.page)}</td>
+    <td>${thumbs(it)}</td>
+    <td><b>${money(tot)}</b> <span class="muted">est.</span></td>
+    <td class="muted">Pending</td><td class="muted">Pending</td>
+    <td><span class="pill wait">${i===0 ? "Next up" : "Waiting"}</span></td></tr>` }; })
+];
+
+const TABS = [["all","All"],["waiting","Waiting"],["paid","Paid"],["shipped","Shipped"],["delivered","Delivered"]];
+let cur = "all";
+const draw = () => {
+  const list = rows.filter(r => cur === "all" || r.status === cur);
+  $("#statusTabs").innerHTML = TABS.map(([k,l]) => `<button data-k="${k}" class="${k===cur?"on":""}">${l}<span>${k==="all"?rows.length:rows.filter(r=>r.status===k).length}</span></button>`).join("");
+  $("#ledgerBody").innerHTML = list.length ? list.map(r=>r.html).join("")
+    : `<tr><td colspan="7"><div class="empty"><span class="pet"><img src="assets/pets/cat.webp" alt="" draggable="false"></span><b>Nothing here yet</b>Orders show up here the moment they're paid, with every link in place.</div></td></tr>`;
+  $("#count").textContent = `${list.length} row${list.length===1?"":"s"}`;
+};
+$("#statusTabs").onclick = e => { const b = e.target.closest("button"); if (b) { cur = b.dataset.k; draw(); } };
+draw();
+</script>
+</body>
+</html>
