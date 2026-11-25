@@ -9,7 +9,7 @@ const CONFIG = {
   fundShare: 90,                       // % of fees to the wish fund
   // Treasury: paste the real wallet addresses; each list gets one row per real transaction (Solscan links)
   wallets: {
-    treasury: "",   // receives creator fees, holds the wish fund
+    treasury: "8gFhKZU8MHmoLbb6H1pRqrRgPW4q7XYKwq9Povws7mrc",   // receives creator fees, holds the wish fund
     team: "",       // receives the 10% team share
     sp3nd: ""       // SP3ND's payment address (orders are paid to it)
   },

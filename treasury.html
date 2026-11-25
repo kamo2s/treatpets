@@ -10,12 +10,13 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="assets/site.css?v=22" />
+<link rel="stylesheet" href="assets/site.css?v=23" />
 </head>
 <body data-page="treasury">
-<script src="assets/data.js?v=22"></script>
-<script src="assets/local-preview.js?v=22"></script>
-<script src="assets/site.js?v=22"></script>
+<script src="assets/data.js?v=23"></script>
+<script src="assets/local-preview.js?v=23"></script>
+<script src="assets/site.js?v=23"></script>
+<script src="assets/live.js?v=2"></script>
 
 <header class="page-head">
   <div class="wrap">
@@ -36,7 +37,7 @@
     <div class="stat"><span>Fees claimed</span><strong id="tClaimed">0 SOL</strong><em id="tClaims">0 claims</em></div>
     <div class="stat"><span>Into the wish fund</span><strong id="tFund">$0</strong><em id="tSwaps">0 swaps</em></div>
     <div class="stat"><span>Spent on wishes</span><strong id="tSpent">$0</strong><em id="tOrders">0 orders</em></div>
-    <div class="stat"><span>Wish fund now</span><strong id="tNow">$0</strong><em>USDC ready for the next order</em></div>
+    <div class="stat"><span>Wish fund now</span><strong id="tNow">$0</strong><em id="tNowNote">USDC ready for the next order</em></div>
   </div>
 
   <div class="split" style="margin-top:40px">
@@ -50,6 +51,7 @@
     </div>
   </div>
 
+  <p class="muted" id="liveNote" style="margin:14px 0 0"></p>
   <h3 class="sec display">The wallets</h3>
   <p class="sec-sub">Open any address on Solscan to see every transaction it has ever made.</p>
   <div class="wallets" id="wallets"></div>
@@ -63,6 +65,10 @@
 
   <h3 class="sec display">Swaps into the wish fund</h3>
   <div class="tbl"><table><thead><tr><th>When</th><th>Fees in</th><th>To the team</th><th>USDC to the fund</th><th>Transaction</th></tr></thead><tbody id="tSwapRows"></tbody></table></div>
+
+  <h3 class="sec display">Other transfers</h3>
+  <p class="sec-sub">Every other SOL movement in or out of the treasury, so nothing is hidden.</p>
+  <div class="tbl"><table><thead><tr><th>When</th><th>Direction</th><th>SOL</th><th>Transaction</th></tr></thead><tbody id="tXferRows"></tbody></table></div>
 </main>
 
 <script>
@@ -76,15 +82,7 @@ const C = CONFIG, f = C.fundShare;
 $("#fundPct").textContent = f + "%"; $("#teamPct").textContent = (100 - f) + "%";
 $("#ringFund").setAttribute("stroke-dasharray", `${f} ${100 - f}`);
 
-const claimed = C.feeClaims.reduce((a,c)=>a+c.sol,0);
-const toFund = C.swaps.reduce((a,s)=>a+s.fund,0);
-const spent = C.orders.reduce((a,o)=>a+o.usdc,0);
-$("#tClaimed").textContent = sol(claimed); $("#tClaims").textContent = `${C.feeClaims.length} claims`;
-$("#tFund").textContent = usd(toFund); $("#tSwaps").textContent = `${C.swaps.length} swaps`;
-$("#tSpent").textContent = usd(spent); $("#tOrders").textContent = `${C.orders.length} orders`;
-$("#tNow").textContent = usd(C.stats.fund);
-
-const W = [["treasury","Treasury","Receives the creator fees and holds the wish fund in USDC."],
+const W = [["treasury","Treasury","Receives the creator fees and holds the wish fund."],
            ["team","Team share","Receives the " + (100-f) + "% that pays for running it."],
            ["sp3nd","SP3ND","Where orders are paid. Each payment's memo names its order."]];
 $("#wallets").innerHTML = W.map(([k,label,desc]) => { const a = C.wallets[k]; return `
@@ -93,12 +91,26 @@ $("#wallets").innerHTML = W.map(([k,label,desc]) => { const a = C.wallets[k]; re
     <p>${desc}</p>
     ${a ? `<p style="margin-top:8px"><a class="lnk" href="https://solscan.io/account/${a}" target="_blank" rel="noopener">View on Solscan ↗</a></p>` : ""}</div>`; }).join("");
 
-$("#tPay").innerHTML = C.orders.length ? C.orders.map(o => `<tr><td><b>${esc(o.id)}</b></td><td>${esc(o.date)}</td><td>${esc(o.shelter)}</td><td>${usd(o.usdc)}</td><td>${link(o.tx)}</td></tr>`).join("")
-  : empty(5, "No payments yet. The first one appears here as soon as the fund covers the next shelter's order.");
-$("#tClaimRows").innerHTML = C.feeClaims.length ? C.feeClaims.map(c => `<tr><td>${esc(c.date)}</td><td>${sol(c.sol)}</td><td>${link(c.tx)}</td></tr>`).join("")
-  : empty(3, "No fee claims yet.");
-$("#tSwapRows").innerHTML = C.swaps.length ? C.swaps.map(s => `<tr><td>${esc(s.date)}</td><td>${sol(s.sol)}</td><td>${usd(s.team)}</td><td><b>${usd(s.fund)}</b></td><td>${link(s.tx)}</td></tr>`).join("")
-  : empty(5, "No swaps yet.");
+function draw(L) {
+  // live chain data when available; the hand-entered CONFIG lists otherwise
+  const claims = L ? L.claims : C.feeClaims, swaps = L ? L.swaps : C.swaps, pays = L ? L.payments : [], transfers = L ? L.transfers : [];
+  const claimed = claims.reduce((a,c)=>a+c.sol,0), toFund = swaps.reduce((a,s)=>a+(s.usdc!=null ? s.usdc*f/100 : s.fund),0);
+  const spent = C.orders.reduce((a,o)=>a+o.usdc,0) || pays.reduce((a,p)=>a+p.usdc,0);
+  $("#tClaimed").textContent = sol(claimed); $("#tClaims").textContent = `${claims.length} claim${claims.length===1?"":"s"}`;
+  $("#tFund").textContent = usd(toFund); $("#tSwaps").textContent = `${swaps.length} swap${swaps.length===1?"":"s"}`;
+  $("#tSpent").textContent = usd(spent); $("#tOrders").textContent = `${C.orders.length || pays.length} orders`;
+  if (L) { $("#tNow").textContent = L.usdc > 0.01 ? usd(L.usdc) : sol(L.sol); $("#tNowNote").textContent = L.usdc > 0.01 ? "USDC in the treasury, live" : "SOL in the treasury, live"; }
+  else $("#tNow").textContent = usd(C.stats.fund);
+  $("#liveNote").textContent = L ? `Live from Solana · updated ${new Date(L.updated).toLocaleTimeString()}` : (C.wallets.treasury ? "Loading live data from Solana…" : "");
+  const payRows = C.orders.length ? C.orders.map(o => `<tr><td><b>${esc(o.id)}</b></td><td>${esc(o.date)}</td><td>${esc(o.shelter)}</td><td>${usd(o.usdc)}</td><td>${link(o.tx)}</td></tr>`)
+    : pays.map(p => `<tr><td><b>${esc(p.memo || "—")}</b></td><td>${esc(p.date)}</td><td>—</td><td>${usd(p.usdc)}</td><td>${link(p.tx)}</td></tr>`);
+  $("#tPay").innerHTML = payRows.length ? payRows.join("") : empty(5, "No payments yet. The first one appears here as soon as the fund covers the next shelter's order.");
+  $("#tClaimRows").innerHTML = claims.length ? claims.map(c => `<tr><td>${esc(c.date)}</td><td>${sol(c.sol)}</td><td>${link(c.tx)}</td></tr>`).join("") : empty(3, "No fee claims yet.");
+  $("#tSwapRows").innerHTML = swaps.length ? swaps.map(s => { const u = s.usdc != null ? s.usdc : s.fund + s.team; return `<tr><td>${esc(s.date)}</td><td>${sol(s.sol)}</td><td>${usd(u*(100-f)/100)}</td><td><b>${usd(u*f/100)}</b></td><td>${link(s.tx)}</td></tr>`; }).join("") : empty(5, "No swaps yet.");
+  $("#tXferRows").innerHTML = transfers.length ? transfers.map(x => `<tr><td>${esc(x.date)}</td><td>${x.dir === "in" ? "In" : "Out"}</td><td>${sol(x.sol)}</td><td>${link(x.tx)}</td></tr>`).join("") : empty(4, L ? "No other transfers." : "—");
+}
+draw(null);
+if (window.LIVE) window.LIVE.then(L => { if (L) draw(L); else $("#liveNote").textContent = "Couldn't reach Solana right now. Open the wallet on Solscan for live data."; });
 </script>
 </body>
 </html>
