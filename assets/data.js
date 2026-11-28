@@ -2,8 +2,8 @@
 const CONFIG = {
   brand: "Treat",
   ticker: "$TREAT",
-  contractAddress: "6ofNt6UqKHfuAfxpWR1MQhEuJ8F5LCXrJRP9Rmzhpump",
-  buyUrl: "https://pump.fun/coin/6ofNt6UqKHfuAfxpWR1MQhEuJ8F5LCXrJRP9Rmzhpump",
+  contractAddress: "sWxaA9pDtkMfKbzaMMGCMQRJE73ZNKpGxF4jjDWpump",
+  buyUrl: "https://pump.fun/coin/sWxaA9pDtkMfKbzaMMGCMQRJE73ZNKpGxF4jjDWpump",
   xUrl: "https://x.com/treatpetslol",
   treasuryUrl: "https://solscan.io",
   fundShare: 90,                       // % of fees to the wish fund
